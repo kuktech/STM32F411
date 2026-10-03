@@ -58,7 +58,6 @@ EndBSPDependencies */
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_cdc.h"
 #include "usbd_ctlreq.h"
-#include "usbd_def.h"
 
 
 /** @addtogroup STM32_USB_DEVICE_LIBRARY
@@ -137,18 +136,18 @@ __ALIGN_BEGIN static uint8_t USBD_CDC_DeviceQualifierDesc[USB_LEN_DEV_QUALIFIER_
   * @{
   */
 
-extern uint8_t USBD_CDC_SOF(struct _USBD_HandleTypeDef *pdev);
+
 /* CDC interface class callbacks structure */
 USBD_ClassTypeDef  USBD_CDC =
-{ 
-  USBD_CDC_Init,  
+{
+  USBD_CDC_Init,
   USBD_CDC_DeInit,
   USBD_CDC_Setup,
   NULL,                 /* EP0_TxSent */
   USBD_CDC_EP0_RxReady,
   USBD_CDC_DataIn,
   USBD_CDC_DataOut,
-  USBD_CDC_SOF,
+  NULL,
   NULL,
   NULL,
 #ifdef USE_USBD_COMPOSITE

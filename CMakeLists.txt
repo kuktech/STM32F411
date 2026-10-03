@@ -52,6 +52,7 @@ file(GLOB SRC_FILES CONFIGURE_DEPENDS
     App/hw/driver/uart.c
     App/hw/driver/cdc.c
     App/hw/driver/cli.c
+    App/hw/driver/button.c
 
     App/common/core/*.c
 )

@@ -1,4 +1,5 @@
 #include "hw.h"
+#include "button.h"
 
 void hwInit(){
     bspInit();
@@ -7,4 +8,5 @@ void hwInit(){
     ledInit();
     usbInit();
     uartInit();
+    buttonInit();
 }

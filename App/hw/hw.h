@@ -6,4 +6,5 @@
 #include "reset.h"
 #include "flash.h"
 #include "cli.h"
+#include "button.h"
 void hwInit();
