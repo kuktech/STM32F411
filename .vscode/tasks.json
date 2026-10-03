@@ -1,0 +1,34 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "cmake",
+			"label": "CMake: 빌드",
+			"command": "build",
+			"targets": [
+				"all"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "CMake 템플릿 빌드 작업"
+		},
+		{
+			"type": "cmake",
+			"label": "CMake: 다시 빌드 정리",
+			"command": "cleanRebuild",
+			"targets": [
+				"all"
+			],
+			"group": "build",
+			"problemMatcher": [],
+			"detail": "CMake 템플릿 다시 빌드 정리 작업"
+		},
+		{
+			"type": "cmake",
+			"label": "CMake: 구성",
+			"command": "configure",
+			"problemMatcher": [],
+			"detail": "CMake 템플릿 구성 작업"
+		}
+	]
+}
