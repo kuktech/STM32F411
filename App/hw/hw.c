@@ -3,5 +3,8 @@
 void hwInit(){
     bspInit();
    
-   ledInit();
+    cliInit();
+    ledInit();
+    usbInit();
+    uartInit();
 }

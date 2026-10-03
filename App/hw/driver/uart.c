@@ -2,20 +2,26 @@
 #include "cdc.h"
 #include <stdio.h>
 #include "qbuffer.h"
-#include "stm32f4xx_hal_uart.h"
+
+#ifdef _USE_HW_UART
+
+#define _USE_UART1
 
 static bool is_open[UART_MAX_CH];
 
+#ifdef _USE_UART2
 static qbuffer_t qbuffer[UART_MAX_CH];
 static uint8_t rx_buf[256];
 
 UART_HandleTypeDef huart1;
 DMA_HandleTypeDef hdma_usart1_rx;
+#endif
 
 bool uartInit(){
     for(int i = 0; i<UART_MAX_CH; i++){
         is_open[i] = false;
     }
+    return true;
 }
 
 bool uartOpen(uint8_t ch, uint32_t baud){
@@ -27,6 +33,7 @@ bool uartOpen(uint8_t ch, uint32_t baud){
             ret = true;
             break;
         case _DEF_UART2:
+        #ifdef _USE_UART2
             huart1.Instance = USART1;
             huart1.Init.BaudRate = baud;
             huart1.Init.WordLength = UART_WORDLENGTH_8B;
@@ -61,6 +68,7 @@ bool uartOpen(uint8_t ch, uint32_t baud){
                 qbuffer[ch].in = qbuffer[ch].len - hdma_usart1_rx.Instance->CNDTR;
                 qbuffer[ch].out = qbuffer[ch].in;
             }
+            #endif
             break;
     
     }
@@ -69,15 +77,17 @@ bool uartOpen(uint8_t ch, uint32_t baud){
 }
 
 uint32_t uartAvailable(uint8_t ch){
-    uint32_t ret;
+    uint32_t ret = 0;
 
     switch (ch) {
         case _DEF_UART1:
             ret = cdcAvailable();
             break;
         case _DEF_UART2:
+        #ifdef _USE_UART2
             qbuffer[ch].in = qbuffer[ch].len - hdma_usart1_rx.Instance->CNDTR;
             ret = qbufferAvailable(&qbuffer[ch]);
+        #endif
             break;
     }
 
@@ -85,14 +95,16 @@ uint32_t uartAvailable(uint8_t ch){
 }
 
 uint8_t uartRead(uint8_t ch){
-    uint8_t ret;
+    uint8_t ret = 0;
 
     switch (ch) {
         case _DEF_UART1:
         ret = cdcRead();
         break;
         case _DEF_UART2:
+        #ifdef _USE_UART2
         qbufferRead(&qbuffer[_DEF_UART2], &ret, 1);
+        #endif
         break;
     }
 
@@ -101,16 +113,18 @@ uint8_t uartRead(uint8_t ch){
 
 uint32_t uartWrite(uint8_t ch, uint8_t *p_data, uint32_t length){
     uint32_t ret = 0;
-     HAL_StatusTypeDef status;
+    //HAL_StatusTypeDef status;
    switch (ch) {
         case _DEF_UART1:
         ret = cdcWrite(p_data, length);
         break;
         case _DEF_UART2:
+        #ifdef _USE_UART2
         status = HAL_UART_Transmit(&huart1, p_data, length, 100);
         if(status == HAL_OK){
             ret = length;
         }
+        #endif
         break;
     }
 
@@ -142,11 +156,13 @@ uint32_t uartGetBaud(uint8_t ch){
             ret = cdcGetBaud(ch);
             break;
         case _DEF_UART2:
+        #ifdef _USE_UART2
             ret = huart1.Init.BaudRate;
+            #endif
     }
     return ret;
 }
-
+#ifdef _USE_UART2
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart){
 
 }
@@ -241,3 +257,7 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
   /* USER CODE END USART1_MspDeInit 1 */
   }
 }
+
+#endif
+
+#endif

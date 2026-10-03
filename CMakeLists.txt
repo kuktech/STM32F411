@@ -42,20 +42,18 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined library search paths
 )
 file(GLOB SRC_FILES CONFIGURE_DEPENDS
-  App/*.c
-  App/ap/*.c
-  App/bsp/*.c
-  App/hw/*.c
+    App/*.c
+    App/ap/*.c
+    App/bsp/*.c
+    App/hw/*.c
 
-  App/hw/driver/led.c
-  
-  App/common/core/*.c
-  Core/Src/gpio.c
-  Core/Src/stm32f4xx_it.c
-  Core/Src/stm32f4xx_hal_msp.c
-  Core/Src/syscalls.c
-  Core/Src/sysmem.c
-  startup_stm32f411xe.s
+    App/hw/driver/led.c
+    App/hw/driver/usb.c
+    App/hw/driver/uart.c
+    App/hw/driver/cdc.c
+    App/hw/driver/cli.c
+
+    App/common/core/*.c
 )
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE

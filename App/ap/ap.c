@@ -1,7 +1,9 @@
 #include "ap.h"
+#include "cli.h"
+#include "uart.h"
 
 void apInit(){
-
+    cliOpen(_DEF_UART1, 57600);
 }
 
 void apMain(){
@@ -12,6 +14,8 @@ void apMain(){
             pre_time = millis();
             ledToggle(_DEF_LED1);
         }
+
+        cliMain();
     }
 }
 
