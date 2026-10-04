@@ -9,4 +9,5 @@ void hwInit(){
     usbInit();
     uartInit();
     buttonInit();
+    gpioInit();
 }

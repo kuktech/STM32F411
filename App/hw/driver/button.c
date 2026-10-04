@@ -24,7 +24,7 @@ bool buttonInit(){
 
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_PULLUP;
-
+    
     for(int i = 0; i<BUTTON_MAX_CH;i++){
     GPIO_InitStruct.Pin = button_tbl[i].pin;
     HAL_GPIO_Init(button_tbl[i].port, &GPIO_InitStruct);
@@ -32,20 +32,20 @@ bool buttonInit(){
 #ifdef _USE_HW_CLI
 cliAdd("button", cliButton);
 #endif
-    return ret;
+return ret;
 }
 
 bool buttonGetPressed(uint8_t ch){
     bool ret = false;
-
+    
     if(ch >= BUTTON_MAX_CH){
         return false;
+        
+        if(HAL_GPIO_ReadPin(button_tbl[ch].port, button_tbl[ch].pin) == button_tbl[ch].on_state){
+            ret = true;
+        }
     }
-
-    if(HAL_GPIO_ReadPin(button_tbl[ch].port, button_tbl[ch].pin) == button_tbl[ch].on_state){
-        ret = true;
-    }
-   
+        
     return ret;
 }
 
