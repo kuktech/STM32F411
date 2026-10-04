@@ -55,9 +55,14 @@ file(GLOB SRC_FILES CONFIGURE_DEPENDS
     App/hw/driver/button.c
     App/hw/driver/gpio.c
     App/hw/driver/sd.c
-
+    App/hw/driver/fatfs.c
 
     App/common/core/*.c
+
+    FatFs/src/*.c
+    FatFs/src/option/*.c
+
+    APP/hw/driver/fatfs/*.c
 )
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
@@ -81,6 +86,10 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     App/common/core
 
     App/hw
+
+    FatFs/src
+
+    APP/hw/driver/fatfs
 )
 
 # Add project symbols (macros)

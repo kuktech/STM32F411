@@ -27,3 +27,5 @@
 #define _USE_HW_SD
 
 #define _PIN_GPIO_SDCARD_DETECT     0
+
+#define _USE_HW_FATFS

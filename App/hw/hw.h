@@ -9,5 +9,6 @@
 #include "button.h"
 #include "gpio.h"
 #include "sd.h"
+#include "fatfs.h"
 
 void hwInit();
