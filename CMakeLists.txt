@@ -54,6 +54,8 @@ file(GLOB SRC_FILES CONFIGURE_DEPENDS
     App/hw/driver/cli.c
     App/hw/driver/button.c
     App/hw/driver/gpio.c
+    App/hw/driver/sd.c
+
 
     App/common/core/*.c
 )
