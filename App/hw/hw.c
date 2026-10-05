@@ -1,5 +1,6 @@
 #include "hw.h"
 #include "button.h"
+#include "def.h"
 
 void hwInit(){
     bspInit();
@@ -15,5 +16,12 @@ void hwInit(){
         fatfsInit();
     }
 
-    usbBegin(USB_MSC_MODE);
+    if(buttonGetPressed(_DEF_BUTTON1) == true && sdIsDetected() == true)
+    {
+        usbBegin(USB_MSC_MODE);
+    }
+    else
+    {
+        usbBegin(USB_CDC_MODE);
+    }
 }

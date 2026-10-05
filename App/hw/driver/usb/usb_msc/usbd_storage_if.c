@@ -255,8 +255,6 @@ int8_t STORAGE_IsWriteProtected_FS(uint8_t lun)
 int8_t STORAGE_Read_FS(uint8_t lun, uint8_t *buf, uint32_t blk_addr, uint16_t blk_len)
 {
   int8_t ret = -1;
-  uint32_t timeout = 100000;
-
   if (sdIsDetected() == true)
   {
     if(sdReadBlocks(blk_addr, buf, blk_len, 1000) == true){
@@ -264,6 +262,7 @@ int8_t STORAGE_Read_FS(uint8_t lun, uint8_t *buf, uint32_t blk_addr, uint16_t bl
     }
     ret = 0;
   }
+  return ret;
 }
 
 /**
@@ -277,7 +276,6 @@ int8_t STORAGE_Read_FS(uint8_t lun, uint8_t *buf, uint32_t blk_addr, uint16_t bl
 int8_t STORAGE_Write_FS(uint8_t lun, uint8_t *buf, uint32_t blk_addr, uint16_t blk_len)
 {
   int8_t ret = -1;
-  uint32_t timeout = 100000;
 
   if (sdIsDetected() == true)
   {
@@ -286,6 +284,7 @@ int8_t STORAGE_Write_FS(uint8_t lun, uint8_t *buf, uint32_t blk_addr, uint16_t b
     }
   return ret;
   }
+  return ret;
 }
 
 int8_t STORAGE_GetMaxLun_FS(void)
