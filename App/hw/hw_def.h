@@ -4,12 +4,8 @@
 #define _USE_HW_LED
 #define     HW_LED_MAX_CH   1
 
-#define _USE_HW_USB
-
 #define _USE_HW_UART
 #define     HW_UART_MAX_CH  1
-
-#define _USE_HW_CDC
 
 #define _USE_HW_CLI
 
@@ -29,3 +25,8 @@
 #define _PIN_GPIO_SDCARD_DETECT     0
 
 #define _USE_HW_FATFS
+
+#define _USE_HW_CDC
+#define _USE_HW_USB
+#define      HW_USE_CDC             1
+#define      HW_USE_MSC             1

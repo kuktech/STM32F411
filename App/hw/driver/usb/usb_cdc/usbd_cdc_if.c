@@ -7,12 +7,13 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2026 STMicroelectronics.
-  * All rights reserved.
+  * <h2><center>&copy; Copyright (c) 2020 STMicroelectronics.
+  * All rights reserved.</center></h2>
   *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
   *
   ******************************************************************************
   */
@@ -22,6 +23,7 @@
 #include "usbd_cdc_if.h"
 
 /* USER CODE BEGIN INCLUDE */
+#include "cdc.h"
 USBD_CDC_LineCodingTypeDef LineCoding =
     {
         115200,
@@ -79,6 +81,11 @@ uint32_t cdcWrite(uint8_t *p_data, uint32_t length)
 {
   uint32_t pre_time;
   uint8_t ret;
+
+  if (cdcIsInit() != true)
+  {
+    return 0;
+  }
 
   pre_time = millis();
   while(1)
@@ -324,8 +331,7 @@ static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
   /*                                        4 - Space                            */
   /* 6      | bDataBits  |   1   | Number Data bits (5, 6, 7, 8 or 16).          */
   /*******************************************************************************/
- 
-         case CDC_SET_LINE_CODING:
+    case CDC_SET_LINE_CODING:
       LineCoding.bitrate   = (uint32_t)(pbuf[0]);
       LineCoding.bitrate  |= (uint32_t)(pbuf[1]<<8);
       LineCoding.bitrate  |= (uint32_t)(pbuf[2]<<16);
@@ -344,9 +350,6 @@ static int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
       pbuf[5] = LineCoding.paritytype;
       pbuf[6] = LineCoding.datatype;
     break;
- 
-
-  
 
     case CDC_SET_CONTROL_LINE_STATE:
 
@@ -431,7 +434,7 @@ uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len)
 
 /**
   * @brief  CDC_TransmitCplt_FS
-  *         Data transmitted callback
+  *         Data transmited callback
   *
   *         @note
   *         This function is IN transfer complete callback used to inform user that
@@ -463,3 +466,5 @@ static int8_t CDC_TransmitCplt_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum)
 /**
   * @}
   */
+
+/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

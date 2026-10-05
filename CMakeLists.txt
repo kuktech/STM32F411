@@ -63,6 +63,12 @@ file(GLOB SRC_FILES CONFIGURE_DEPENDS
     FatFs/src/option/*.c
 
     APP/hw/driver/fatfs/*.c
+
+    APP/hw/driver/usb/*.c
+    APP/hw/driver/usb/usb_cdc/*.c
+    APP/hw/driver/usb/usb_msc/*.c
+    APP/hw/driver/usb/core/*.c
+    
 )
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
@@ -90,6 +96,11 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     FatFs/src
 
     APP/hw/driver/fatfs
+
+    APP/hw/driver/usb
+    APP/hw/driver/usb/usb_cdc
+    APP/hw/driver/usb/usb_msc
+    APP/hw/driver/usb/core
 )
 
 # Add project symbols (macros)

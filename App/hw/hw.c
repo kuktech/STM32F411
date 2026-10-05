@@ -14,4 +14,6 @@ void hwInit(){
     if(sdInit()==true){
         fatfsInit();
     }
+
+    usbBegin(USB_MSC_MODE);
 }
