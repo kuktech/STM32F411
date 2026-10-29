@@ -1,12 +1,12 @@
 #include "ap.h"
-#include "cli.h"
-#include "uart.h"
 
-void apInit(){
+void apInit()
+{
     cliOpen(_DEF_UART1, 57600);
 }
 
-void apMain(){
+void apMain()
+{
     uint32_t pre_time;
     pre_time = millis();
     while(1){
@@ -17,6 +17,6 @@ void apMain(){
 
         cliMain();
     }
-}
+    }
 
 

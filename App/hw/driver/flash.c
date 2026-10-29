@@ -1,25 +1,42 @@
 #include "flash.h"
+#include "cli.h"
 #include "stm32f4xx_hal_flash.h"
+#include "stm32f4xx_hal_flash_ex.h"
 
 #ifdef _USE_HW_FLASH
 
-#define FLASH_MAX_SECTOR    64
+#define FLASH_MAX_SECTOR    8
 
 typedef struct{
     uint32_t addr;
-    uint16_t length;
+    uint32_t length;
 
 }flash_tbl_t;
 
-static flash_tbl_t flash_tbl[FLASH_MAX_SECTOR];
+static flash_tbl_t flash_tbl[FLASH_MAX_SECTOR] = {
+    {0x8000000, 16*1024},
+    {0x8004000, 16*1024},
+    {0x8008000, 16*1024},
+    {0x800C000, 16*1024},
+    {0x8010000, 64*1024},
+    {0x8020000, 128*1024},
+    {0x8040000, 128*1024},
+    {0x8060000, 128*1024},
+
+};
 
 static bool flashInSector(uint16_t sector_num, uint32_t addr, uint32_t length);
 
-bool flashInit(){
-    for(int i = 0; i < FLASH_MAX_SECTOR; i++){
-        flash_tbl[i].addr = 0x8000000 + i*1024;
-        flash_tbl[i].length = 1024;
-    }
+#ifdef _USE_HW_CLI
+static void cliFlash(cli_args_t *args);
+#endif
+
+bool flashInit()
+{
+    #ifdef _USE_HW_CLI
+    cliAdd("flash", cliFlash);
+    #endif
+
     return true;
 }
 bool flashErase(uint32_t addr, uint32_t length){
@@ -39,15 +56,18 @@ bool flashErase(uint32_t addr, uint32_t length){
             sector_count++;
         }
     }
-    if(sector_count > 0){
+    if(sector_count > 0)
+    {
     HAL_FLASH_Unlock();
-    init.TypeErase = FLASH_TYPEERASE_PAGES;
+    init.TypeErase = FLASH_TYPEERASE_SECTORS;
     init.Banks = FLASH_BANK_1;
-    init.PageAddress = flash_tbl[start_sector_num].addr;
-    init.NbPages = sector_count;
+    init.Sector = start_sector_num;
+    init.NbSectors = sector_count;
+    init.VoltageRange = FLASH_VOLTAGE_RANGE_3;
 
     status = HAL_FLASHEx_Erase(&init, &page_error);
-    if(status == HAL_OK){
+    if(status == HAL_OK)
+    {
         ret = true;
     }
     HAL_FLASH_Lock();
@@ -58,15 +78,11 @@ bool flashWrite(uint32_t addr, uint8_t *p_data, uint32_t length){
     bool ret = false;
     HAL_StatusTypeDef status;
 
-    if(addr%2 != 0 ){
-        return false;
-    } 
     HAL_FLASH_Unlock();
-    for(int i = 0; i<length; i+=2){
+    for(int i = 0; i<length; i+=1){
         uint16_t data;
         data = p_data[i+0] << 0;
-        data |= p_data[i+1] << 8;
-        status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_HALFWORD, addr+i, (uint64_t)data);
+        status = HAL_FLASH_Program(FLASH_TYPEPROGRAM_BYTE, addr+i, (uint64_t)data);
         if(status != HAL_OK){
             ret = false;
             break;
@@ -112,5 +128,84 @@ bool flashInSector(uint16_t sector_num, uint32_t addr, uint32_t length){
     }
     return ret;
 }
+
+
+    #ifdef _USE_HW_CLI
+
+    
+    void cliFlash(cli_args_t *args){
+        bool ret = false;
+
+        if(args->argc == 1 && args->isStr(0, "info") == true)
+        {
+            for (int i =0; i<FLASH_MAX_SECTOR; i++){
+                cliPrintf("0x%X : %dKB\n", flash_tbl[i].addr, flash_tbl[i].length);
+            }
+        }
+
+        if(args->argc == 3 && args->isStr(0, "write") == true)
+        {
+            uint32_t addr;
+            uint32_t data;
+
+            addr = (uint32_t)args->getData(1);
+            data = (uint32_t)args->getData(2);
+            
+            if(flashWrite(addr, (uint8_t *)&data, 4) == true)
+            {
+                cliPrintf("write ok\n");
+            }
+            else {
+            {
+                cliPrintf("write Fail\n");
+            }
+            }
+
+    
+            ret = true;
+        }
+
+        if(args->argc == 3 && args->isStr(0, "erase") == true)
+        {
+            uint32_t addr;
+            uint32_t length;
+
+            addr = (uint32_t)args->getData(1);
+            length = (uint32_t)args->getData(2);
+            
+            if(flashErase(addr,length) == true)
+            {
+                cliPrintf("cliErase ok\n");
+            }
+            else 
+            {
+                cliPrintf("fail\n");
+            }
+    
+            ret = true;
+        }
+
+        if(args->argc == 3 && args->isStr(0, "read") == true)
+        {
+            uint32_t addr;
+            uint32_t length;
+
+            addr = (uint32_t)args->getData(1);
+            length = (uint32_t)args->getData(2);
+
+            for(int i = 0; i< length; i++)
+            {
+                cliPrintf("0x%X : 0x%X\n", addr + i, *((uint8_t*)(addr + i)));
+            }
+            ret = true;
+        }
+        if(ret != true){
+            cliPrintf("flash info\n");
+            cliPrintf("flash read addr length\n");
+            cliPrintf("flash erase addr length\n");
+            cliPrintf("flash write addr data\n");
+        }
+    }
+    #endif
 
 #endif

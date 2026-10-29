@@ -12,13 +12,13 @@
 #define HW_CLI_CMD_LIST_MAX     16
 #define HW_CLI_CMD_NAME_MAX     16
 #define HW_CLI_LINE_HIS_MAX     4
-#define HW_CLI_LINE_BUF_MAX     32
+#define HW_CLI_LINE_BUF_MAX     64
 
 #define _USE_HW_BUTTON
 #define     HW_BUTTON_MAX_CH    1
 
 #define _USE_HW_GPIO
-#define     HW_GPIO_MAX_CH      1
+#define     HW_GPIO_MAX_CH      4
 
 #define _USE_HW_SD
 
@@ -30,3 +30,15 @@
 #define _USE_HW_USB
 #define      HW_USE_CDC             1
 #define      HW_USE_MSC             1
+
+#define _USE_HW_FLASH
+
+#define _USE_HW_SPI
+
+#define      HW_SPI_MAX_CH          1
+
+#define _USE_HW_ST7735
+
+#define _USE_HW_LCD
+#define     HW_LCD_HEIGHT      160
+#define     HW_LCD_WIDTH       80

@@ -10,9 +10,14 @@ typedef struct{
     bool init_value;
 }gpio_tbl_t;
 
-gpio_tbl_t gpio_tbl[GPIO_MAX_CH] = {
-    {GPIOB, GPIO_PIN_9, _DEF_INPUT_PULLUP,GPIO_PIN_RESET, GPIO_PIN_SET,true},
-};
+const gpio_tbl_t gpio_tbl[GPIO_MAX_CH] =
+    {
+        {GPIOB, GPIO_PIN_9, _DEF_INPUT_PULLUP, GPIO_PIN_RESET, GPIO_PIN_SET,   true},       // 0. SD CD
+        {GPIOA, GPIO_PIN_2, _DEF_OUTPUT,       GPIO_PIN_SET,   GPIO_PIN_RESET, _DEF_LOW},   // 1. LCD BKL
+        {GPIOA, GPIO_PIN_3, _DEF_OUTPUT,       GPIO_PIN_SET,   GPIO_PIN_RESET, _DEF_HIGH},  // 2. LCD CS
+        {GPIOA, GPIO_PIN_4, _DEF_OUTPUT,       GPIO_PIN_SET,   GPIO_PIN_RESET, _DEF_HIGH},  // 3. LCD DC
+    };
+
 
 #ifdef _USE_HW_CLI
 static void cliGpio(cli_args_t *args);
@@ -143,6 +148,8 @@ static void cliGpio(cli_args_t *args){
 
         gpioPinWrite(ch,value);
         cliPrintf("gpio write %d : %d\n", ch, value);
+
+        ret = true;
     }
     if(ret != true){
         cliPrintf("gpio show\n");

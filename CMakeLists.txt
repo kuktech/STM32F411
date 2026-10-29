@@ -56,6 +56,9 @@ file(GLOB SRC_FILES CONFIGURE_DEPENDS
     App/hw/driver/gpio.c
     App/hw/driver/sd.c
     App/hw/driver/fatfs.c
+    App/hw/driver/flash.c
+    App/hw/driver/spi.c
+    App/hw/driver/lcd.c
 
     App/common/core/*.c
 
@@ -68,6 +71,8 @@ file(GLOB SRC_FILES CONFIGURE_DEPENDS
     APP/hw/driver/usb/usb_cdc/*.c
     APP/hw/driver/usb/usb_msc/*.c
     APP/hw/driver/usb/core/*.c
+
+    APP/hw/driver/lcd/*.c
     
 )
 # Add sources to executable
@@ -88,6 +93,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     App/common
 
     App/common/hw/include
+    App/common/hw/include/lcd
 
     App/common/core
 

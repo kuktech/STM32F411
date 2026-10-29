@@ -2,6 +2,7 @@
 #include "button.h"
 #include "def.h"
 
+
 void hwInit(){
     bspInit();
    
@@ -11,6 +12,8 @@ void hwInit(){
     uartInit();
     buttonInit();
     gpioInit();
+    flashInit();
+    spiInit();
 
     if(sdInit()==true){
         fatfsInit();
@@ -24,4 +27,7 @@ void hwInit(){
     {
         usbBegin(USB_CDC_MODE);
     }
+
+    lcdInit();
+
 }
